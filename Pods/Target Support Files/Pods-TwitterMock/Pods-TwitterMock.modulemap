@@ -1,0 +1,6 @@
+framework module Pods_TwitterMock {
+  umbrella header "Pods-TwitterMock-umbrella.h"
+
+  export *
+  module * { export * }
+}
