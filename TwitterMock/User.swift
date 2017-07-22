@@ -14,9 +14,5 @@ class User: NSObject {
     var email: String?
     var profileImage: String?
     var id: String?
-    
-    
-   
-    
 
 }

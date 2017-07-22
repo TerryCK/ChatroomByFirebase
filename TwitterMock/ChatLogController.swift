@@ -38,8 +38,8 @@ class ChatLogController: UICollectionViewController, UITextFieldDelegate, UIColl
     }
     
     
-   @objc func keyboardHide() {
-    
+    @objc func keyboardHide() {
+        
         UIView.animate(withDuration: 0.5, delay: 0,
                        usingSpringWithDamping: 1,
                        initialSpringVelocity: 1,
@@ -49,7 +49,7 @@ class ChatLogController: UICollectionViewController, UITextFieldDelegate, UIColl
                         self.view.frame = CGRect(x: 0, y: 0, width: self.view.frame.width, height: self.view.frame.height)
         },
                        completion: nil)
-    
+        
     }
     
     
@@ -89,7 +89,7 @@ class ChatLogController: UICollectionViewController, UITextFieldDelegate, UIColl
                 if message.chatPartnerId == self.user?.id {
                     self.messages.append(message)
                 }
-
+                
             }, withCancel: nil)
             
         }, withCancel: nil)
@@ -155,6 +155,7 @@ class ChatLogController: UICollectionViewController, UITextFieldDelegate, UIColl
         }
         inputTextField.text = ""
     }
+    
     func dismissKeyboard() {
         view.endEditing(true)
     }
@@ -244,13 +245,39 @@ class ChatLogController: UICollectionViewController, UITextFieldDelegate, UIColl
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: cellId, for: indexPath) as! ChatMessageCell
         
         let message = messages[indexPath.item]
+    
+        setupCell(cell: cell, message: message)
+        
         // modify
+        if let profileImageUrl = user?.profileImage {
+            cell.profileImageView.loadImageUsingCache(with: profileImageUrl)
+        }
+        
+        
         if let text = message.text {
             let width = estimateFrameForText(text: text).width
             cell.bubbleWidthAnchor?.constant = width + 32
             cell.textView.text  = message.text
         }
         return cell
+    }
+    
+    private func setupCell(cell: ChatMessageCell, message: Message){
+        if message.fromId == Auth.auth().currentUser?.uid {
+            cell.bubbleView.backgroundColor = UIColor.bubbleBlue
+            cell.textView.textColor = .white
+            cell.bubbleRightAnchor?.isActive = true
+            cell.bubbleLeftAnchor?.isActive = false
+            cell.profileImageView.isHidden = true
+        } else {
+            cell.bubbleView.backgroundColor = .lightGray
+            cell.textView.textColor = .black
+            cell.bubbleRightAnchor?.isActive = false
+            cell.bubbleLeftAnchor?.isActive = true
+            cell.profileImageView.isHidden = false
+            
+        }
+
     }
 }
 
