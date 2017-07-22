@@ -80,6 +80,8 @@ class LoginController: UIViewController {
         imageView.translatesAutoresizingMaskIntoConstraints = false
         imageView.contentMode = .scaleAspectFill
         imageView.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(selectorImageHandler)))
+        imageView.layer.cornerRadius = 75
+        imageView.clipsToBounds = true
         imageView.isUserInteractionEnabled = true
         
         return imageView
@@ -115,9 +117,7 @@ class LoginController: UIViewController {
     func loginRegisterHandler() {
         
         if loginRegisterController.selectedSegmentIndex == 0 {
-            
             loginHandler()
-            
         } else {
             registerHandle()
         }

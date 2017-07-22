@@ -10,6 +10,7 @@
 		9C9255FE0CDE4F09D402701B /* Pods_TwitterMock.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FD30DCE7AF40FE189DA93AAD /* Pods_TwitterMock.framework */; };
 		A8621DEB1F20868900F33600 /* Message.swift in Sources */ = {isa = PBXBuildFile; fileRef = A8621DEA1F20868900F33600 /* Message.swift */; };
 		A8621DEE1F2098F100F33600 /* UserCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A8621DED1F2098F100F33600 /* UserCell.swift */; };
+		A8653FB31F2222BF00DCF86F /* ChatMessageCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A8653FB21F2222BF00DCF86F /* ChatMessageCell.swift */; };
 		A8705DD11F1CDA0800767215 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = A8705DD01F1CDA0800767215 /* AppDelegate.swift */; };
 		A8705DD31F1CDA0800767215 /* MessageController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A8705DD21F1CDA0800767215 /* MessageController.swift */; };
 		A8705DD61F1CDA0800767215 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = A8705DD41F1CDA0800767215 /* Main.storyboard */; };
@@ -28,6 +29,7 @@
 		6BD54DFC5ECA821AC756BA5A /* Pods-TwitterMock.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-TwitterMock.debug.xcconfig"; path = "Pods/Target Support Files/Pods-TwitterMock/Pods-TwitterMock.debug.xcconfig"; sourceTree = "<group>"; };
 		A8621DEA1F20868900F33600 /* Message.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Message.swift; sourceTree = "<group>"; };
 		A8621DED1F2098F100F33600 /* UserCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UserCell.swift; sourceTree = "<group>"; };
+		A8653FB21F2222BF00DCF86F /* ChatMessageCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ChatMessageCell.swift; sourceTree = "<group>"; };
 		A8705DCD1F1CDA0800767215 /* TwitterMock.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = TwitterMock.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		A8705DD01F1CDA0800767215 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		A8705DD21F1CDA0800767215 /* MessageController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageController.swift; sourceTree = "<group>"; };
@@ -71,6 +73,7 @@
 			isa = PBXGroup;
 			children = (
 				A8621DED1F2098F100F33600 /* UserCell.swift */,
+				A8653FB21F2222BF00DCF86F /* ChatMessageCell.swift */,
 			);
 			name = Views;
 			sourceTree = "<group>";
@@ -271,6 +274,7 @@
 				A8F454261F1F195400B243A7 /* User.swift in Sources */,
 				A8B810281F1CF6440011AC58 /* LoginController.swift in Sources */,
 				A8F454291F1F38A300B243A7 /* LoginController+handlers.swift in Sources */,
+				A8653FB31F2222BF00DCF86F /* ChatMessageCell.swift in Sources */,
 				A8705DD11F1CDA0800767215 /* AppDelegate.swift in Sources */,
 				A8621DEE1F2098F100F33600 /* UserCell.swift in Sources */,
 				A8B8102A1F1CF6670011AC58 /* Extensions.swift in Sources */,
@@ -397,12 +401,15 @@
 			baseConfigurationReference = 6BD54DFC5ECA821AC756BA5A /* Pods-TwitterMock.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				DEVELOPMENT_TEAM = Y8SJ5M44N4;
 				INFOPLIST_FILE = TwitterMock/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				ONLY_ACTIVE_ARCH = YES;
 				PRODUCT_BUNDLE_IDENTIFIER = com.YouChu.TwitterMock;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_VERSION = 3.0;
 			};
 			name = Debug;
@@ -412,12 +419,15 @@
 			baseConfigurationReference = FFE5B5BD841FCEF287A7A458 /* Pods-TwitterMock.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				DEVELOPMENT_TEAM = Y8SJ5M44N4;
 				INFOPLIST_FILE = TwitterMock/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				ONLY_ACTIVE_ARCH = YES;
 				PRODUCT_BUNDLE_IDENTIFIER = com.YouChu.TwitterMock;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_VERSION = 3.0;
 			};
 			name = Release;

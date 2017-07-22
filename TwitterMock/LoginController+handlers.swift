@@ -46,7 +46,12 @@ extension LoginController: UIImagePickerControllerDelegate, UINavigationControll
     
     func registerHandle() {
         
-        guard let email = emailTextView.text, let password = passwordTextView.text, let name = nameTextView.text, let image = profileImageView.image else { return }
+        guard let email = emailTextView.text,
+            let password = passwordTextView.text,
+            let name = nameTextView.text,
+            let image = profileImageView.image else {
+                return
+        }
         
         Auth.auth().createUser(withEmail: email, password: password) { (user , error) in
             if error != nil {
@@ -60,27 +65,22 @@ extension LoginController: UIImagePickerControllerDelegate, UINavigationControll
             let imageName = UUID().uuidString
             let storageRef = Storage.storage().reference().child("\(imageName).jpg")
             
-            if let uploadData = UIImageJPEGRepresentation(image, 0.1) {
+            guard let uploadData = UIImageJPEGRepresentation(image, 0.1) else {
+                return
+            }
             
                 storageRef.putData(uploadData, metadata: nil) { (metadata, error) in
-                    
                     if let err = error {
                         print(err)
                     }
-                    
                     guard let profileImageUrl = metadata?.downloadURL()?.absoluteString else {
                         return
                     }
-                    
-                    
+
                     let values = ["name": name, "email": email, "profileImage": profileImageUrl]
-                    
                     self.messageController?.navigationItem.title = name
                     self.registerUserIntoDatabase(uid: uid, values: values as [String : AnyObject])
                 }
-                
-            }
-            
             
         }
         

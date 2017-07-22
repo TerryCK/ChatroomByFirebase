@@ -14,14 +14,58 @@ class ChatLogController: UICollectionViewController, UITextFieldDelegate, UIColl
     let cellId = "cellid"
     
     var user: User? {
+        
         didSet {
             navigationItem.title = user?.name
-            
             observeMessage()
+        }
+        
+    }
+    
+    var messages = [Message]() {
+        didSet {
+            collectionView?.reloadData()
         }
     }
     
-    var messages = [Message]()
+    
+    
+    private func observeKeyboardNotifications() {
+        NotificationCenter.default.addObserver(self, selector: #selector(keyboardShow), name: .UIKeyboardWillShow, object: nil)
+        
+        NotificationCenter.default.addObserver(self, selector: #selector(keyboardHide), name: .UIKeyboardWillHide, object: nil)
+        
+    }
+    
+    
+   @objc func keyboardHide() {
+    
+        UIView.animate(withDuration: 0.5, delay: 0,
+                       usingSpringWithDamping: 1,
+                       initialSpringVelocity: 1,
+                       options: .curveEaseOut,
+                       animations: {
+                        
+                        self.view.frame = CGRect(x: 0, y: 0, width: self.view.frame.width, height: self.view.frame.height)
+        },
+                       completion: nil)
+    
+    }
+    
+    
+    func keyboardShow() {
+        UIView.animate(withDuration: 0.5,
+                       delay: 0,
+                       usingSpringWithDamping: 1,
+                       initialSpringVelocity: 1,
+                       options: .curveEaseOut,
+                       animations: {
+                        let y: CGFloat = UIDevice.current.orientation.isLandscape ? -100 : -60
+                        self.view.frame = CGRect(x: 0, y: y, width: self.view.frame.width, height: self.view.frame.height)
+        },
+                       completion: nil)
+        
+    }
     
     func observeMessage() {
         guard let uid = Auth.auth().currentUser?.uid else {
@@ -39,10 +83,13 @@ class ChatLogController: UICollectionViewController, UITextFieldDelegate, UIColl
                 guard let dictionary = snapshot.value as? [String: AnyObject] else {
                     return
                 }
+                
                 let message = Message()
                 message.setValuesForKeys(dictionary)
-                self.messages.append(message)
-                
+                if message.chatPartnerId == self.user?.id {
+                    self.messages.append(message)
+                }
+
             }, withCancel: nil)
             
         }, withCancel: nil)
@@ -108,13 +155,20 @@ class ChatLogController: UICollectionViewController, UITextFieldDelegate, UIColl
         }
         inputTextField.text = ""
     }
+    func dismissKeyboard() {
+        view.endEditing(true)
+    }
+    
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        collectionView?.alwaysBounceVertical = true
         collectionView?.backgroundColor = .white
-        collectionView?.register(UICollectionViewCell.self, forCellWithReuseIdentifier: cellId)
-        
-        
+        collectionView?.register(ChatMessageCell.self, forCellWithReuseIdentifier: cellId)
+        view.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(dismissKeyboard)))
+        collectionView?.contentInset = UIEdgeInsetsMake(0, 0, -50, 0)
+        collectionView?.scrollIndicatorInsets = UIEdgeInsetsMake(0, 0, -50, 0)
+        observeKeyboardNotifications()
         setupView()
     }
     
@@ -123,8 +177,6 @@ class ChatLogController: UICollectionViewController, UITextFieldDelegate, UIColl
         view.addSubview(containerView)
         view.addSubview(separatorView)
         containerView.addSubview(inputTextField)
-        
-        
         containerView.addSubview(sendButton)
         
         separatorView.bottomAnchor.constraint(equalTo: containerView.topAnchor).isActive = true
@@ -148,6 +200,8 @@ class ChatLogController: UICollectionViewController, UITextFieldDelegate, UIColl
         sendButton.bottomAnchor.constraint(equalTo: containerView.bottomAnchor).isActive = true
         sendButton.heightAnchor.constraint(equalTo: containerView.heightAnchor).isActive = true
         sendButton.rightAnchor.constraint(equalTo: containerView.rightAnchor).isActive = true
+        
+        
     }
     
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
@@ -162,13 +216,17 @@ class ChatLogController: UICollectionViewController, UITextFieldDelegate, UIColl
     
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-            return CGSize(width: view.frame.width, height: 80)
+        return CGSize(width: view.frame.width, height: 80)
     }
     
     override func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: cellId, for: indexPath)
+        
+        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: cellId, for: indexPath) as! ChatMessageCell
+        
+        let message = messages[indexPath.item]
         
         cell.backgroundColor = .brown
+        cell.textView.text  = message.text ?? "no content"
         
         
         return cell

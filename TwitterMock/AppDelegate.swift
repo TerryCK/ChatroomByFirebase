@@ -13,20 +13,16 @@ import Firebase
 class AppDelegate: UIResponder, UIApplicationDelegate {
     
     var window: UIWindow?
-    
-    var userNode = "users"
-    var messageNode = "message"
+
     
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
+       
         FirebaseApp.configure()
         
         window = UIWindow(frame: UIScreen.main.bounds)
         window?.makeKeyAndVisible()
-        
         window?.rootViewController = UINavigationController(rootViewController: MessageController())
-        
-        
-        
+
         return true
     }
     
