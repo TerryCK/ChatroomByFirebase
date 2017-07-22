@@ -36,6 +36,10 @@ extension UIColor {
         return UIColor.rgb(red: 61 , green: 91, blue: 151)
     }
     
+    class var bubbleBlue: UIColor {
+        return UIColor.rgb(red: 0, green: 137, blue: 249)
+    }
+    
     class var unSelected: UIColor {
         return UIColor.rgb(red: 91, green: 14, blue: 13)
         
