@@ -71,10 +71,17 @@ class MessageController: UITableViewController {
         
         self.messageDictionary[chatPartnerId] = message
         self.messages = Array(self.messageDictionary.values)
-        self.messages.sort{ (message1, message2) -> Bool in
+        
+        self.messages.sort { (message1, message2) -> Bool in
+            
             return (message1.timestamp?.intValue)! > (message2.timestamp?.intValue)!
         }
         
+        timer?.invalidate()
+        print("cancel timer")
+        timer = Timer.scheduledTimer(timeInterval: 0.3, target: self, selector: #selector(self.handlerReloadTable), userInfo: nil, repeats: false)
+        
+
     }
     
     
@@ -207,12 +214,16 @@ class MessageController: UITableViewController {
         navigationController?.pushViewController(chatLogController, animated: true)
     }
     
-    var messages = [Message](){
-        didSet {
-            tableView.reloadData()
-        }
-    }
+    var messages = [Message]()
+    var timer: Timer?
     
+    func handlerReloadTable() {
+        print("reloaded the table")
+        DispatchQueue.main.async {
+            self.tableView.reloadData()
+        }
+        
+    }
     
     var messageDictionary = [String: Message]()
     

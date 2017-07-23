@@ -9,11 +9,7 @@
 import UIKit
 
 class ChatMessageCell: UICollectionViewCell {
-//    var user: User? {
-//        didSet {
-//            profileImageView.loadImageUsingCache(with: <#T##String#>)
-//        }
-//    }
+
     
     let textView: UITextView = {
         let tv = UITextView()
@@ -70,17 +66,18 @@ class ChatMessageCell: UICollectionViewCell {
         profileImageView.heightAnchor.constraint(equalToConstant: 32).isActive = true
 
         bubbleRightAnchor = bubbleView.rightAnchor.constraint(equalTo: self.rightAnchor, constant: -8)
+        
         bubbleRightAnchor?.isActive = true
         
         
         bubbleLeftAnchor = bubbleView.leftAnchor.constraint(equalTo: profileImageView.rightAnchor, constant: 8)
-        bubbleLeftAnchor?.isActive = false
+
         
-        bubbleWidthAnchor = bubbleView.widthAnchor.constraint(equalToConstant: 100)
+        bubbleWidthAnchor = bubbleView.widthAnchor.constraint(equalToConstant: 200)
         bubbleWidthAnchor?.isActive = true
         
         bubbleView.heightAnchor.constraint(equalTo: self.heightAnchor).isActive = true
-        bubbleView.bottomAnchor.constraint(equalTo: self.bottomAnchor).isActive = true
+        bubbleView.topAnchor.constraint(equalTo: self.topAnchor).isActive = true
         
         
         textView.leftAnchor.constraint(equalTo: bubbleView.leftAnchor, constant: 8).isActive = true

@@ -31,41 +31,39 @@ class ChatLogController: UICollectionViewController, UITextFieldDelegate, UIColl
     
     
     private func observeKeyboardNotifications() {
-        NotificationCenter.default.addObserver(self, selector: #selector(keyboardShow), name: .UIKeyboardWillShow, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(handleKeyboardWillShow), name: .UIKeyboardWillShow, object: nil)
         
-        NotificationCenter.default.addObserver(self, selector: #selector(keyboardHide), name: .UIKeyboardWillHide, object: nil)
-        
-    }
-    
-    
-    @objc func keyboardHide() {
-        
-        UIView.animate(withDuration: 0.5, delay: 0,
-                       usingSpringWithDamping: 1,
-                       initialSpringVelocity: 1,
-                       options: .curveEaseOut,
-                       animations: {
-                        
-                        self.view.frame = CGRect(x: 0, y: 0, width: self.view.frame.width, height: self.view.frame.height)
-        },
-                       completion: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(handleKeyboardWillHide), name: .UIKeyboardWillHide, object: nil)
         
     }
     
     
-    func keyboardShow() {
-        UIView.animate(withDuration: 0.5,
-                       delay: 0,
-                       usingSpringWithDamping: 1,
-                       initialSpringVelocity: 1,
-                       options: .curveEaseOut,
-                       animations: {
-                        let y: CGFloat = UIDevice.current.orientation.isLandscape ? -100 : -60
-                        self.view.frame = CGRect(x: 0, y: y, width: self.view.frame.width, height: self.view.frame.height)
-        },
-                       completion: nil)
+    func handleKeyboardWillHide(notification: NSNotification) {
+        
+        let keyboardDuration = (notification.userInfo?[UIKeyboardAnimationDurationUserInfoKey] as AnyObject).doubleValue
+        containViewBottonAnchor?.constant = 0
+        UIView.animate(withDuration: keyboardDuration!) {
+            self.view.layoutIfNeeded()
+        }
+
         
     }
+    
+    var containViewBottonAnchor: NSLayoutConstraint?
+    
+    func handleKeyboardWillShow(notification: NSNotification) {
+        let keyboardFrame = (notification.userInfo?[UIKeyboardFrameEndUserInfoKey] as AnyObject).cgRectValue
+        
+        let keyboardDuration = (notification.userInfo?[UIKeyboardAnimationDurationUserInfoKey] as AnyObject).doubleValue
+        
+        containViewBottonAnchor?.constant = -(keyboardFrame?.height)!
+        UIView.animate(withDuration: keyboardDuration!) {
+            self.view.layoutIfNeeded()
+        }
+        
+    }
+    
+    
     
     func observeMessage() {
         guard let uid = Auth.auth().currentUser?.uid else {
@@ -193,9 +191,9 @@ class ChatLogController: UICollectionViewController, UITextFieldDelegate, UIColl
         
         containerView.leftAnchor.constraint(equalTo: view.leftAnchor).isActive = true
         containerView.rightAnchor.constraint(equalTo: view.rightAnchor).isActive = true
-        containerView.bottomAnchor.constraint(equalTo: view.bottomAnchor).isActive = true
         containerView.heightAnchor.constraint(equalToConstant: 50).isActive = true
-        
+        containViewBottonAnchor =  containerView.bottomAnchor.constraint(equalTo: view.bottomAnchor)
+        containViewBottonAnchor?.isActive = true
         
         
         inputTextField.leftAnchor.constraint(equalTo: containerView.leftAnchor, constant: 8).isActive = true
@@ -245,7 +243,7 @@ class ChatLogController: UICollectionViewController, UITextFieldDelegate, UIColl
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: cellId, for: indexPath) as! ChatMessageCell
         
         let message = messages[indexPath.item]
-    
+        
         setupCell(cell: cell, message: message)
         
         // modify
@@ -277,7 +275,7 @@ class ChatLogController: UICollectionViewController, UITextFieldDelegate, UIColl
             cell.profileImageView.isHidden = false
             
         }
-
+        
     }
 }
 
