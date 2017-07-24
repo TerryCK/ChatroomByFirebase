@@ -10,6 +10,7 @@ import UIKit
 
 class ChatMessageCell: UICollectionViewCell {
 
+    var chatLogController: ChatLogController?
     
     let textView: UITextView = {
         let tv = UITextView()
@@ -17,7 +18,7 @@ class ChatMessageCell: UICollectionViewCell {
         tv.translatesAutoresizingMaskIntoConstraints = false
         tv.font = .systemFont(ofSize: 16)
         tv.textColor = .white
-        
+        tv.isEditable = false
         return tv
     }()
     
@@ -35,7 +36,6 @@ class ChatMessageCell: UICollectionViewCell {
     let profileImageView: UIImageView = {
         let imageView = UIImageView()
         imageView.backgroundColor = .brown
-        imageView.image = UIImage(named: "nedstark")
         imageView.translatesAutoresizingMaskIntoConstraints = false
         imageView.layer.cornerRadius = 16
         imageView.layer.masksToBounds = true
@@ -44,6 +44,18 @@ class ChatMessageCell: UICollectionViewCell {
         return imageView
     }()
     
+    lazy var messageImageView: UIImageView = {
+        let imageView = UIImageView()
+        imageView.backgroundColor = .brown
+        
+        imageView.translatesAutoresizingMaskIntoConstraints = false
+        imageView.layer.cornerRadius = 16
+        imageView.layer.masksToBounds = true
+        imageView.contentMode = .scaleAspectFill
+        imageView.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(handleImageZooming)))
+        imageView.isUserInteractionEnabled = true
+        return imageView
+    }()
     
     var bubbleWidthAnchor: NSLayoutConstraint?
     var bubbleRightAnchor: NSLayoutConstraint?
@@ -57,10 +69,13 @@ class ChatMessageCell: UICollectionViewCell {
         addSubview(bubbleView)
         addSubview(textView)
         addSubview(profileImageView)
-
+        addSubview(messageImageView)
         
         
-        
+        messageImageView.leftAnchor.constraint(equalTo: bubbleView.leftAnchor).isActive = true
+        messageImageView.rightAnchor.constraint(equalTo: bubbleView.rightAnchor).isActive = true
+        messageImageView.heightAnchor.constraint(equalTo: self.heightAnchor).isActive = true
+        messageImageView.bottomAnchor.constraint(equalTo: self.bottomAnchor).isActive = true
 
         bubbleRightAnchor = bubbleView.rightAnchor.constraint(equalTo: self.rightAnchor, constant: -8)
         bubbleRightAnchor?.isActive = true
@@ -87,7 +102,12 @@ class ChatMessageCell: UICollectionViewCell {
         profileImageView.heightAnchor.constraint(equalToConstant: 32).isActive = true
 
     }
+    func handleImageZooming(tapGesture: UITapGestureRecognizer) {
+        if let imeageView = tapGesture.view as? UIImageView {
+            chatLogController?.performZoomInForStartingImageView(startingImageView: imeageView)
+        }
     
+    }
     
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")

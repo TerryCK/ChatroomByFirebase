@@ -36,31 +36,39 @@ class MessageController: UITableViewController {
             return
         }
         
-        let fDataBaseRef = Database.database().reference()
-        
-        let ref = fDataBaseRef.child("user-messages").child(uid)
+        let ref = Database.database().reference().child("user-messages").child(uid)
         
         ref.observe(.childAdded, with: { (snapshot) in
+            let userId = snapshot.key
             
-            let messageId = snapshot.key
-            let messageReference = fDataBaseRef.child("message").child(messageId)
-            messageReference.observeSingleEvent(of: .value, with: { (snapshot) in
-                
-                self.setupMessages(with: snapshot.value)
+            ref.child(userId).observe(.childAdded, with: { (snapshot) in
+                let messageId = snapshot.key
+                self.fetchMessageAndAttempReload(messageId: messageId)
                 
             }, withCancel: nil)
             
         }, withCancel: nil)
     }
     
+    
+    private func fetchMessageAndAttempReload(messageId: String){
+
+        let messageReference = Database.database().reference().child("message").child(messageId)
+        messageReference.observeSingleEvent(of: .value, with: { (snapshot) in
+            
+            self.setupMessages(with: snapshot.value)
+            
+        }, withCancel: nil)
+
+    }
     private func setupMessages(with value: Any?) {
         
         guard let dictionary = value as? [String: AnyObject] else {
             return
         }
         
-        let message = Message()
-        message.setValuesForKeys(dictionary)
+        let message = Message(dictionary: dictionary)
+    
         
         guard let chatPartnerId = message.chatPartnerId else {
             return
@@ -70,21 +78,18 @@ class MessageController: UITableViewController {
         }
         
         self.messageDictionary[chatPartnerId] = message
-        self.messages = Array(self.messageDictionary.values)
-        
-        self.messages.sort {(message1, message2) -> Bool in
-            
-            return (message1.timestamp?.intValue)! > (message2.timestamp?.intValue)!
-        }
-        
-        timer?.invalidate()
-        print("cancel timer")
-        timer = Timer.scheduledTimer(timeInterval: 0.3, target: self, selector: #selector(self.handlerReloadTable), userInfo: nil, repeats: false)
-        
 
+        attempReloadTheTable()
+        
+        
+        
     }
     
-    
+    private func attempReloadTheTable() {
+        timer?.invalidate()
+        timer = Timer.scheduledTimer(timeInterval: 0.3, target: self, selector: #selector(self.handlerReloadTable), userInfo: nil, repeats: false)
+    }
+
     func newMessageHandler() {
         let newMessageController = NewMessageController()
         newMessageController.messageController = self
@@ -119,7 +124,7 @@ class MessageController: UITableViewController {
             self.users.append(user)
             self.setupNavBarTitle(user: user)
             
-        }, withCancel: nil)
+            }, withCancel: nil)
     }
     
     func handleLogout() {
@@ -218,6 +223,11 @@ class MessageController: UITableViewController {
     var timer: Timer?
     
     func handlerReloadTable() {
+        self.messages = Array(self.messageDictionary.values)
+        self.messages.sort {(message1, message2) -> Bool in
+            return (message1.timestamp?.intValue)! > (message2.timestamp?.intValue)!
+        }
+        
         print("reloaded the table")
         DispatchQueue.main.async {
             self.tableView.reloadData()
