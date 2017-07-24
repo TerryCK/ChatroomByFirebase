@@ -45,7 +45,7 @@ class ChatLogController: UICollectionViewController, UITextFieldDelegate, UIColl
         UIView.animate(withDuration: keyboardDuration!) {
             self.view.layoutIfNeeded()
         }
-
+        
         
     }
     
@@ -165,13 +165,50 @@ class ChatLogController: UICollectionViewController, UITextFieldDelegate, UIColl
         collectionView?.backgroundColor = .white
         collectionView?.register(ChatMessageCell.self, forCellWithReuseIdentifier: cellId)
         view.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(dismissKeyboard)))
-        collectionView?.contentInset = UIEdgeInsetsMake(8, 0, 58, 0)
-        collectionView?.scrollIndicatorInsets = UIEdgeInsetsMake(0, 0, 50, 0)
-        
-        observeKeyboardNotifications()
-        setupView()
+        collectionView?.contentInset = UIEdgeInsetsMake(8, 0, 8, 0)
+//        collectionView?.scrollIndicatorInsets = UIEdgeInsetsMake(0, 0, 50, 0)
+        collectionView?.keyboardDismissMode = .interactive
+        //
+        //        observeKeyboardNotifications()
+        //        setupView()
     }
     
+    lazy var inputContainerView: UIView = {
+        let containerView = UIView()
+        containerView.frame = CGRect(x: 0, y: 0, width: self.view.frame.width, height: 50)
+        containerView.backgroundColor = .white
+        containerView.addSubview(self.inputTextField)
+        containerView.addSubview(self.sendButton)
+        containerView.addSubview(self.separatorView)
+        
+        self.inputTextField.leftAnchor.constraint(equalTo: containerView.leftAnchor, constant: 8).isActive = true
+        self.inputTextField.rightAnchor.constraint(equalTo: self.sendButton.leftAnchor).isActive = true
+        self.inputTextField.heightAnchor.constraint(equalTo: containerView.heightAnchor).isActive = true
+        self.inputTextField.bottomAnchor.constraint(equalTo: containerView.bottomAnchor).isActive = true
+        
+        self.sendButton.widthAnchor.constraint(equalToConstant: 60).isActive = true
+        self.sendButton.bottomAnchor.constraint(equalTo: containerView.bottomAnchor).isActive = true
+        self.sendButton.heightAnchor.constraint(equalTo: containerView.heightAnchor).isActive = true
+        self.sendButton.rightAnchor.constraint(equalTo: containerView.rightAnchor).isActive = true
+        
+        self.separatorView.bottomAnchor.constraint(equalTo: containerView.topAnchor).isActive = true
+        self.separatorView.leftAnchor.constraint(equalTo: containerView.leftAnchor).isActive = true
+        self.separatorView.rightAnchor.constraint(equalTo: containerView.rightAnchor).isActive = true
+        self.separatorView.heightAnchor.constraint(equalToConstant: 1).isActive = true
+        
+       return containerView
+    }()
+    
+    override var inputAccessoryView: UIView? {
+        get {
+            
+            return inputContainerView
+        }
+    }
+    
+    override var canBecomeFirstResponder: Bool {
+        return true
+    }
     override func willTransition(to newCollection: UITraitCollection, with coordinator: UIViewControllerTransitionCoordinator) {
         collectionView?.collectionViewLayout.invalidateLayout()
         
@@ -180,14 +217,9 @@ class ChatLogController: UICollectionViewController, UITextFieldDelegate, UIColl
     func setupView() {
         
         view.addSubview(containerView)
-        view.addSubview(separatorView)
-        containerView.addSubview(inputTextField)
-        containerView.addSubview(sendButton)
         
-        separatorView.bottomAnchor.constraint(equalTo: containerView.topAnchor).isActive = true
-        separatorView.leftAnchor.constraint(equalTo: view.leftAnchor).isActive = true
-        separatorView.rightAnchor.constraint(equalTo: view.rightAnchor).isActive = true
-        separatorView.heightAnchor.constraint(equalToConstant: 1).isActive = true
+        
+        
         
         containerView.leftAnchor.constraint(equalTo: view.leftAnchor).isActive = true
         containerView.rightAnchor.constraint(equalTo: view.rightAnchor).isActive = true
@@ -196,15 +228,9 @@ class ChatLogController: UICollectionViewController, UITextFieldDelegate, UIColl
         containViewBottonAnchor?.isActive = true
         
         
-        inputTextField.leftAnchor.constraint(equalTo: containerView.leftAnchor, constant: 8).isActive = true
-        inputTextField.rightAnchor.constraint(equalTo: sendButton.leftAnchor).isActive = true
-        inputTextField.heightAnchor.constraint(equalTo: containerView.heightAnchor).isActive = true
-        inputTextField.bottomAnchor.constraint(equalTo: containerView.bottomAnchor).isActive = true
         
-        sendButton.widthAnchor.constraint(equalToConstant: 60).isActive = true
-        sendButton.bottomAnchor.constraint(equalTo: containerView.bottomAnchor).isActive = true
-        sendButton.heightAnchor.constraint(equalTo: containerView.heightAnchor).isActive = true
-        sendButton.rightAnchor.constraint(equalTo: containerView.rightAnchor).isActive = true
+        
+        
         
         
     }
@@ -226,8 +252,8 @@ class ChatLogController: UICollectionViewController, UITextFieldDelegate, UIColl
         if let text = messages[indexPath.item].text {
             height = estimateFrameForText(text: text).height + 20
         }
-        
-        return CGSize(width: view.frame.width, height: height)
+        let width = UIScreen.main.bounds.width
+        return CGSize(width: width, height: height)
     }
     
     private func estimateFrameForText(text: String) -> CGRect {
@@ -264,9 +290,10 @@ class ChatLogController: UICollectionViewController, UITextFieldDelegate, UIColl
         if message.fromId == Auth.auth().currentUser?.uid {
             cell.bubbleView.backgroundColor = UIColor.bubbleBlue
             cell.textView.textColor = .white
-            cell.bubbleRightAnchor?.isActive = true
             cell.bubbleLeftAnchor?.isActive = false
+            cell.bubbleRightAnchor?.isActive = true
             cell.profileImageView.isHidden = true
+            
         } else {
             cell.bubbleView.backgroundColor = .lightGray
             cell.textView.textColor = .black
@@ -276,6 +303,10 @@ class ChatLogController: UICollectionViewController, UITextFieldDelegate, UIColl
             
         }
         
+    }
+    override func viewDidDisappear(_ animated: Bool) {
+        super.viewDidDisappear(animated)
+        NotificationCenter.default.removeObserver(self)
     }
 }
 

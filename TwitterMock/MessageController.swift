@@ -72,7 +72,7 @@ class MessageController: UITableViewController {
         self.messageDictionary[chatPartnerId] = message
         self.messages = Array(self.messageDictionary.values)
         
-        self.messages.sort { (message1, message2) -> Bool in
+        self.messages.sort {(message1, message2) -> Bool in
             
             return (message1.timestamp?.intValue)! > (message2.timestamp?.intValue)!
         }
@@ -108,7 +108,7 @@ class MessageController: UITableViewController {
     func fetchUserAndSetNvigationItemTitle() {
         guard let uid = Auth.auth().currentUser?.uid else { return }
         
-        Database.database().reference().child("users").child(uid).observeSingleEvent(of: .value, with: { (snapshot) in
+        Database.database().reference().child("users").child(uid).observeSingleEvent(of: .value, with: { [unowned self](snapshot) in
             
             guard let dictionary = snapshot.value as? [String: AnyObject] else {
                 return
