@@ -20,19 +20,25 @@ class Message: NSObject {
     var imageHeight: NSNumber?
     var imageWidth: NSNumber?
     
-    var chatPartnerId: String?  {
-        return Auth.auth().currentUser?.uid == fromId ? toId : fromId
-    }
+    var videoUrl: String?
     
-    init(dictionary: [String: AnyObject]) {
+ 
+    init(dictionary: [String: Any]) {
         
         fromId = dictionary["fromId"] as? String
         text = dictionary["text"] as? String
         timestamp = dictionary["timestamp"] as? NSNumber
         toId = dictionary["toId"] as? String
         imageUrl = dictionary["imageUrl"] as? String
+        videoUrl = dictionary["videoUrl"] as? String
         imageHeight = dictionary["imageHeight"] as? NSNumber
         imageWidth = dictionary["imageWidth"] as? NSNumber
         
     }
+    
+    var chatPartnerId: String?  {
+        return Auth.auth().currentUser?.uid == fromId ? toId : fromId
+    }
+    
+    
 }

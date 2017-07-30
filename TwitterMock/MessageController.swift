@@ -13,22 +13,56 @@ class MessageController: UITableViewController {
     
     var cellId = "cellid"
     var users = [User]()
-    
+    var messages = [Message]()
+    var timer: Timer?
+
     override func viewDidLoad() {
         super.viewDidLoad()
-        
-        navigationItem.leftBarButtonItem = UIBarButtonItem(title: "Logout", style: .plain, target: self, action: #selector(handleLogout))
-        
-        let image = UIImage(named: "new_message_icon")
-        navigationItem.rightBarButtonItem = UIBarButtonItem(image: image, style: .plain, target: self, action: #selector(newMessageHandler))
-        
-        
         tableView.register(UserCell.self, forCellReuseIdentifier: cellId)
+
+        tableView.allowsMultipleSelectionDuringEditing = true
         checkUserLoggedIn()
-        
-        
+        setupNavigationItem()
     }
     
+    override func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
+        return true
+    }
+    
+    override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCellEditingStyle, forRowAt indexPath: IndexPath) {
+        guard let uid = Auth.auth().currentUser?.uid else {
+            return
+        }
+        
+        let message = self.messages[indexPath.row]
+        if let chatPartnerId = message.chatPartnerId {
+            Database.database().reference().child("user-messages").child(uid).child(chatPartnerId).removeValue(completionBlock: { (error, ref) in
+                if error != nil {
+                    print(error)
+                    return
+                }
+                self.messageDictionary.removeValue(forKey: chatPartnerId)
+                self.attempReloadTheTable()
+                
+            })
+        }
+        
+    
+    }
+    
+    func setupNavigationItem() {
+        
+        let title = NSLocalizedString("Logout", comment: "")
+        navigationItem.leftBarButtonItem = UIBarButtonItem(title: title,
+                                                           style: .plain,
+                                                           target: self,
+                                                           action: #selector(handleLogout))
+        let image = UIImage(named: "new_message_icon")
+        navigationItem.rightBarButtonItem = UIBarButtonItem(image: image,
+                                                            style: .plain,
+                                                            target: self,
+                                                            action: #selector(newMessageHandler))
+    }
     
     func observeUserMessage() {
         
@@ -48,6 +82,16 @@ class MessageController: UITableViewController {
             }, withCancel: nil)
             
         }, withCancel: nil)
+    
+    
+    ref.observe(.childRemoved, with: { (snapshot) in
+        
+        self.messageDictionary.removeValue(forKey: snapshot.key)
+        self.attempReloadTheTable()
+        
+    }, withCancel: nil)
+    
+    
     }
     
     
@@ -70,15 +114,13 @@ class MessageController: UITableViewController {
         let message = Message(dictionary: dictionary)
     
         
-        guard let chatPartnerId = message.chatPartnerId else {
-            return
-        }
-        guard Auth.auth().currentUser?.uid != chatPartnerId else {
+        guard let chatPartnerId = message.chatPartnerId,
+            Auth.auth().currentUser?.uid != chatPartnerId else {
             return
         }
         
+        
         self.messageDictionary[chatPartnerId] = message
-
         attempReloadTheTable()
         
         
@@ -106,7 +148,6 @@ class MessageController: UITableViewController {
             fetchUserAndSetNvigationItemTitle()
             
         }
-        
     }
     
     
@@ -118,8 +159,8 @@ class MessageController: UITableViewController {
             guard let dictionary = snapshot.value as? [String: AnyObject] else {
                 return
             }
-            let user = User()
-            user.setValuesForKeys(dictionary)
+            let user = User(dictionary: dictionary)
+            
             
             self.users.append(user)
             self.setupNavBarTitle(user: user)
@@ -143,13 +184,13 @@ class MessageController: UITableViewController {
         present(loginController, animated: true, completion: nil)
     }
     
-    func clearUpMessageList() {
+    private func clearUpMessageList() {
         messages.removeAll()
         messageDictionary.removeAll()
         tableView.reloadData()
     }
     
-    let titleView: UIView = {
+   let titleView: UIView = {
         let tv = UIView()
         tv.frame = CGRect(x: 0, y: 0, width: 100, height: 40)
         tv.isUserInteractionEnabled = true
@@ -164,8 +205,12 @@ class MessageController: UITableViewController {
         piv.layer.cornerRadius = 20
         return piv
     }()
-    
-    func setupNavBarTitle(user: User) {
+    let titleLabel: UILabel = {
+        let label = UILabel()
+        label.translatesAutoresizingMaskIntoConstraints = false
+        return label
+    }()
+  private func setupNavBarTitle(user: User) {
         
         clearUpMessageList()
         observeUserMessage()
@@ -182,13 +227,13 @@ class MessageController: UITableViewController {
         }
         
         
-        let label = UILabel()
-        label.text = user.name
-        label.translatesAutoresizingMaskIntoConstraints = false
+    
+        titleLabel.text = user.name
+    
         
         
         containerView.addSubview(profileImageView)
-        containerView.addSubview(label)
+        containerView.addSubview(titleLabel)
         
         profileImageView.leftAnchor.constraint(equalTo: containerView.leftAnchor).isActive = true
         profileImageView.centerYAnchor.constraint(equalTo: containerView.centerYAnchor).isActive = true
@@ -196,13 +241,13 @@ class MessageController: UITableViewController {
         profileImageView.widthAnchor.constraint(equalToConstant: 40).isActive = true
         
         
-        label.leftAnchor.constraint(equalTo: profileImageView.rightAnchor, constant: 8).isActive = true
+        titleLabel.leftAnchor.constraint(equalTo: profileImageView.rightAnchor, constant: 8).isActive = true
         
-        label.centerYAnchor.constraint(equalTo: containerView.centerYAnchor).isActive = true
+        titleLabel.centerYAnchor.constraint(equalTo: containerView.centerYAnchor).isActive = true
         
-        label.heightAnchor.constraint(equalTo: profileImageView.heightAnchor).isActive = true
+        titleLabel.heightAnchor.constraint(equalTo: profileImageView.heightAnchor).isActive = true
         
-        label.rightAnchor.constraint(equalTo: containerView.rightAnchor).isActive = true
+        titleLabel.rightAnchor.constraint(equalTo: containerView.rightAnchor).isActive = true
         
         containerView.centerYAnchor.constraint(equalTo: titleView.centerYAnchor).isActive = true
         containerView.centerXAnchor.constraint(equalTo: titleView.centerXAnchor).isActive = true
@@ -219,13 +264,14 @@ class MessageController: UITableViewController {
         navigationController?.pushViewController(chatLogController, animated: true)
     }
     
-    var messages = [Message]()
-    var timer: Timer?
     
     func handlerReloadTable() {
         self.messages = Array(self.messageDictionary.values)
-        self.messages.sort {(message1, message2) -> Bool in
-            return (message1.timestamp?.intValue)! > (message2.timestamp?.intValue)!
+        self.messages.sort { (message1, message2) -> Bool in
+            guard let m1 = message1.timestamp?.intValue, let m2 = message2.timestamp?.intValue else {
+                return false
+            }
+            return  m1 > m2
         }
         
         print("reloaded the table")
@@ -248,8 +294,8 @@ class MessageController: UITableViewController {
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         
         let cell = tableView.dequeueReusableCell(withIdentifier: cellId, for: indexPath) as! UserCell
-        
         cell.message = messages[indexPath.row]
+        
         return cell
     }
     
@@ -264,10 +310,11 @@ class MessageController: UITableViewController {
         let ref = Database.database().reference().child("users").child(chatPartnerId)
         
         ref.observeSingleEvent(of: .value, with: { (snapshot) in
+            
             if let dictionary = snapshot.value as? [String: AnyObject] {
                 
-                let user = User()
-                user.setValuesForKeys(dictionary)
+                let user = User(dictionary: dictionary)
+                
                 
                 user.id = chatPartnerId
                 self.showChatLogController(user: user)

@@ -58,7 +58,6 @@ class UserCell: UITableViewCell, CGMakeable {
                 let profileImageUrl = dictionary["profileImage"] as? String else {
                     return
             }
-            
             self.textLabel?.text = name
             self.profileImageView.loadImageUsingCache(with: profileImageUrl)
             
@@ -72,7 +71,8 @@ class UserCell: UITableViewCell, CGMakeable {
         addSubview(profileImageView)
         addSubview(timeLabel)
         
-        profileImageView.leftAnchor.constraint(equalTo: self.leftAnchor, constant: 8).isActive = true
+        profileImageView.leftAnchor.constraint(equalTo: self.leftAnchor,
+                                               constant: 8).isActive = true
         profileImageView.centerYAnchor.constraint(equalTo: self.centerYAnchor).isActive = true
         profileImageView.widthAnchor.constraint(equalToConstant: 48).isActive = true
         profileImageView.heightAnchor.constraint(equalToConstant: 48).isActive = true
@@ -80,7 +80,8 @@ class UserCell: UITableViewCell, CGMakeable {
         timeLabel.rightAnchor.constraint(equalTo: self.rightAnchor).isActive = true
         timeLabel.heightAnchor.constraint(equalTo: (textLabel?.heightAnchor)!).isActive = true
         timeLabel.widthAnchor.constraint(equalToConstant: 100).isActive = true
-        timeLabel.topAnchor.constraint(equalTo: self.topAnchor, constant: 20).isActive = true
+        timeLabel.topAnchor.constraint(equalTo: self.topAnchor,
+                                       constant: 20).isActive = true
         
     }
     
@@ -90,9 +91,14 @@ class UserCell: UITableViewCell, CGMakeable {
     override func layoutSubviews() {
         super.layoutSubviews()
         
-        textLabel?.frame = cgRectMake(64, textLabel!.frame.origin.y, textLabel!.frame.width, textLabel!.frame.height)
+        textLabel?.frame = cgRectMake(64, textLabel!.frame.origin.y,
+                                      textLabel!.frame.width,
+                                      textLabel!.frame.height)
        
-        detailTextLabel?.frame = cgRectMake(64, detailTextLabel!.frame.origin.y, detailTextLabel!.frame.width, detailTextLabel!.frame.height)
+        detailTextLabel?.frame = cgRectMake(64,
+                                            detailTextLabel!.frame.origin.y,
+                                            detailTextLabel!.frame.width,
+                                            detailTextLabel!.frame.height)
         
         
     }

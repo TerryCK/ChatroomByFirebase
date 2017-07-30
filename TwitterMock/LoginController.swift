@@ -10,8 +10,7 @@ import UIKit
 import Firebase
 
 class LoginController: UIViewController {
-    
-    
+
     var messageController: MessageController?
     
     let inputsContrainerView: UIView = {
@@ -23,29 +22,19 @@ class LoginController: UIViewController {
         return view
     }()
     
-    lazy var loginRigisterButton: UIButton = {
-        let button = UIButton(type: .system)
-        button.backgroundColor = UIColor.rgb(red: 80, green: 101, blue: 161)
-        button.setTitle("Register", for: .normal)
-        button.translatesAutoresizingMaskIntoConstraints = false
-        button.titleLabel?.font = UIFont.boldSystemFont(ofSize: 16)
-        button.addTarget(self, action: #selector(loginRegisterHandler), for: .touchUpInside)
-        button.setTitleColor(UIColor.white, for: .normal)
-        button.layer.cornerRadius = 5
-        button.layer.masksToBounds = true
-        return button
-    }()
-    
     let nameTextView: UITextField = {
         let tv = UITextField()
-        tv.placeholder = "Name"
+        let placeholderString = NSLocalizedString("Name", comment: "")
+        tv.placeholder = placeholderString
         tv.translatesAutoresizingMaskIntoConstraints = false
         return tv
     }()
     
     let emailTextView: UITextField = {
         let tv = UITextField()
-        tv.placeholder = "Email Address"
+        
+        let placeholderString = NSLocalizedString("Email Address", comment: "")
+        tv.placeholder = placeholderString
         tv.translatesAutoresizingMaskIntoConstraints = false
         tv.keyboardType = .emailAddress
         return tv
@@ -53,7 +42,8 @@ class LoginController: UIViewController {
     
     let passwordTextView: UITextField = {
         let tv = UITextField()
-        tv.placeholder = "Password"
+        let placeholderString = NSLocalizedString("Password", comment: "")
+        tv.placeholder = placeholderString
         tv.translatesAutoresizingMaskIntoConstraints = false
         tv.isSecureTextEntry = true
         return tv
@@ -74,13 +64,27 @@ class LoginController: UIViewController {
         return view
     }()
     
+    lazy var loginRigisterButton: UIButton = {
+        let button = UIButton(type: .system)
+        button.backgroundColor = UIColor.rgb(red: 80, green: 101, blue: 161)
+        let title = NSLocalizedString("Register", comment: "")
+        button.setTitle(title, for: .normal)
+        button.translatesAutoresizingMaskIntoConstraints = false
+        button.titleLabel?.font = UIFont.boldSystemFont(ofSize: 16)
+        button.addTarget(self, action: #selector(loginRegisterHandler), for: .touchUpInside)
+        button.setTitleColor(UIColor.white, for: .normal)
+        button.layer.cornerRadius = 5
+        button.layer.masksToBounds = true
+        return button
+    }()
+
     lazy var profileImageView: UIImageView = {
         let imageView = UIImageView()
-        imageView.image = UIImage(named: "gameofthrones_splash")
+        imageView.image = UIImage(named: "avatar")
         imageView.translatesAutoresizingMaskIntoConstraints = false
         imageView.contentMode = .scaleAspectFill
         imageView.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(selectorImageHandler)))
-        imageView.layer.cornerRadius = 75
+        imageView.layer.cornerRadius = 50
         imageView.clipsToBounds = true
         imageView.isUserInteractionEnabled = true
         
@@ -88,7 +92,10 @@ class LoginController: UIViewController {
     }()
     
     lazy var loginRegisterController: UISegmentedControl = {
-        let item = ["Login", "Register"]
+        
+        let login = NSLocalizedString("Login", comment: "")
+        let register = NSLocalizedString("Register", comment: "")
+        let item = [login, register]
         let sc = UISegmentedControl(items: item)
         sc.tintColor = UIColor.white
         sc.selectedSegmentIndex = 1
@@ -99,6 +106,15 @@ class LoginController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        self.view.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(handleHideKeyBoard)))
+        setupview()
+        observeKeyboardNotifications()
+    }
+    func handleHideKeyBoard() {
+        view.endEditing(true)
+    }
+    func setupview() {
         view.backgroundColor = UIColor.blueLogin
         view.addSubview(inputsContrainerView)
         view.addSubview(loginRigisterButton)
@@ -109,10 +125,7 @@ class LoginController: UIViewController {
         setupLoginRegisterButton()
         setupLoginRegisterController()
         setupProfileImageView()
-        
     }
-    
-    
     
     func loginRegisterHandler() {
         
@@ -121,24 +134,57 @@ class LoginController: UIViewController {
         } else {
             registerHandle()
         }
-        
-        
     }
+    
     func loginHandler() {
         guard let email = emailTextView.text, let password = passwordTextView.text else { return }
         Auth.auth().signIn(withEmail: email, password: password) { (user, error) in
+          
             if let error = error {
                 print("login failure:", error)
                 return
             }
+            
             print("Auth successfully")
             self.messageController?.fetchUserAndSetNvigationItemTitle()
             self.dismiss(animated: true, completion: nil)
         }
+    }
+    func observeKeyboardNotifications() {
+        NotificationCenter.default.addObserver(self, selector: #selector(keyboardShow), name: .UIKeyboardWillShow, object: nil)
         
+        NotificationCenter.default.addObserver(self, selector: #selector(keyboardHide), name: .UIKeyboardWillHide, object: nil)
         
     }
     
+    func keyboardShow() {
+        UIView.animate(withDuration: 0.5,
+                       delay: 0,
+                       usingSpringWithDamping: 1,
+                       initialSpringVelocity: 1,
+                       options: .curveEaseOut,
+                       animations: {
+                        
+                        self.view.frame = CGRect(x: 0, y: -100, width: self.view.frame.width, height: self.view.frame.height)
+        },
+                       completion: nil)
+    }
+    
+    func keyboardHide() {
+        UIView.animate(withDuration: 0.5,
+                       delay: 0,
+                       usingSpringWithDamping: 1,
+                       initialSpringVelocity: 1,
+                       options: .curveEaseOut,
+                       animations: {
+                        
+                        self.view.frame = CGRect(x: 0, y: 0, width: self.view.frame.width, height: self.view.frame.height)
+        },
+                       completion: nil)
+    
+
+    }
+
     
     var inputContainerHeightAnchor: NSLayoutConstraint?
     var nameTextFieldHeightAnchor: NSLayoutConstraint?
@@ -147,8 +193,8 @@ class LoginController: UIViewController {
     
     func handleLoginRegisterChange() {
         let title = loginRegisterController.titleForSegment(at: loginRegisterController.selectedSegmentIndex)
-        
-        loginRigisterButton.setTitle(title, for: .normal)
+        let localizeTitle = NSLocalizedString(title!, comment: "")
+        loginRigisterButton.setTitle(localizeTitle, for: .normal)
         let isSegmentIndexAtLogin = loginRegisterController.selectedSegmentIndex == 0 ? true : false
         
         inputContainerHeightAnchor?.constant =  isSegmentIndexAtLogin ? 100 : 150
@@ -170,12 +216,8 @@ class LoginController: UIViewController {
         
     }
     
-    
-    
     func setupLoginRegisterController() {
-        // x, y, height, width
-        
-        
+
         loginRegisterController.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
         loginRegisterController.bottomAnchor.constraint(equalTo: inputsContrainerView.topAnchor, constant: -12).isActive = true
         
@@ -184,19 +226,15 @@ class LoginController: UIViewController {
         loginRegisterController.heightAnchor.constraint(equalToConstant: 36).isActive = true
         
     }
-    
-    
-    
-    
+
     func setupProfileImageView() {
         
         profileImageView.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
-        profileImageView.bottomAnchor.constraint(equalTo: loginRegisterController.topAnchor, constant: -12).isActive = true
-        profileImageView.heightAnchor.constraint(equalToConstant: 150).isActive = true
-        profileImageView.widthAnchor.constraint(equalToConstant: 150).isActive = true
+        profileImageView.bottomAnchor.constraint(equalTo: loginRegisterController.topAnchor, constant: -10).isActive = true
+        profileImageView.heightAnchor.constraint(equalToConstant: 100).isActive = true
+        profileImageView.widthAnchor.constraint(equalToConstant: 100).isActive = true
         
     }
-    
     
     func setupLoginRegisterButton() {
         
@@ -207,11 +245,7 @@ class LoginController: UIViewController {
     }
     
     
-    
-    
-    
     func setupInputsContrainerView() {
-        
         
         inputsContrainerView.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
         inputsContrainerView.centerYAnchor.constraint(equalTo: view.centerYAnchor).isActive = true
@@ -219,13 +253,11 @@ class LoginController: UIViewController {
         inputContainerHeightAnchor = inputsContrainerView.heightAnchor.constraint(equalToConstant: 150)
         inputContainerHeightAnchor?.isActive = true
         
-        
         inputsContrainerView.addSubview(nameTextView)
         inputsContrainerView.addSubview(nameSeparatorView)
         inputsContrainerView.addSubview(emailTextView)
         inputsContrainerView.addSubview(emailSeparatorView)
         inputsContrainerView.addSubview(passwordTextView)
-        
         
         nameTextView.leftAnchor.constraint(equalTo: inputsContrainerView.leftAnchor, constant: 12).isActive = true
         nameTextView.topAnchor.constraint(equalTo: inputsContrainerView.topAnchor).isActive = true
@@ -259,7 +291,6 @@ class LoginController: UIViewController {
         passwordTextFieldHeightAnchor = passwordTextView.heightAnchor.constraint(equalTo: inputsContrainerView.heightAnchor, multiplier: 1/3)
         
         passwordTextFieldHeightAnchor?.isActive = true
-        
         
     }
     

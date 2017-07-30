@@ -45,6 +45,9 @@ extension UIColor {
         
     }
     
+    class var bubblePartner: UIColor {
+    return UIColor.rgb(red: 236, green: 236, blue: 236)
+    }
 }
 
 
@@ -114,14 +117,14 @@ extension UIView {
     
 }
 
-let imageCache = NSCache<AnyObject, AnyObject>()
+let imageCache = NSCache<NSString, UIImage>()
 
 extension UIImageView {
     
     func loadImageUsingCache(with urlString: String) {
         self.image = nil
         
-        if let cacheImage = imageCache.object(forKey: urlString as AnyObject) as? UIImage {
+        if let cacheImage = imageCache.object(forKey: urlString as NSString){
             self.image = cacheImage
             return 
         }
@@ -139,7 +142,7 @@ extension UIImageView {
                         return
                     }
                     
-                    imageCache.setObject(downloadedImage, forKey: urlString as AnyObject)
+                    imageCache.setObject(downloadedImage, forKey: urlString as NSString)
                     
                     self.image = downloadedImage
                     

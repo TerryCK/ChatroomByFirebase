@@ -5,3 +5,17 @@
   Created by 陳 冠禎 on 2017/7/27.
   Copyright © 2017年 陳 冠禎. All rights reserved.
 */
+
+"test"          = "測試";
+"Logout"        = "登出";
+"Login"         = "登入";
+"Register"      = "註冊新帳號";
+"Name"          = "名字";
+"Email Address" = "電子信箱";
+"Password"      = "密碼";
+
+"Cancel" = "取消";
+"Send" = "傳送";
+"Enter message" = "輸入訊息";
+
+"Friends" = "好友們";

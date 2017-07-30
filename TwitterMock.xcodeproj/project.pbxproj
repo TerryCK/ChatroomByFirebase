@@ -18,7 +18,9 @@
 		A8705DDB1F1CDA0900767215 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = A8705DD91F1CDA0900767215 /* LaunchScreen.storyboard */; };
 		A8B810281F1CF6440011AC58 /* LoginController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A8B810271F1CF6440011AC58 /* LoginController.swift */; };
 		A8B8102A1F1CF6670011AC58 /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = A8B810291F1CF6670011AC58 /* Extensions.swift */; };
+		A8C94E141F2883EC00B91845 /* ChatInputContainerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A8C94E131F2883EC00B91845 /* ChatInputContainerView.swift */; };
 		A8ECAA291F1DFFDC00113610 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = A8ECAA281F1DFFDC00113610 /* GoogleService-Info.plist */; };
+		A8ECD6111F29A02A0030B031 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = A8ECD6131F29A02A0030B031 /* Localizable.strings */; };
 		A8F454241F1F166400B243A7 /* NewMessageController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A8F454231F1F166400B243A7 /* NewMessageController.swift */; };
 		A8F454261F1F195400B243A7 /* User.swift in Sources */ = {isa = PBXBuildFile; fileRef = A8F454251F1F195400B243A7 /* User.swift */; };
 		A8F454291F1F38A300B243A7 /* LoginController+handlers.swift in Sources */ = {isa = PBXBuildFile; fileRef = A8F454281F1F38A300B243A7 /* LoginController+handlers.swift */; };
@@ -39,7 +41,13 @@
 		A8705DDC1F1CDA0900767215 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		A8B810271F1CF6440011AC58 /* LoginController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LoginController.swift; sourceTree = "<group>"; };
 		A8B810291F1CF6670011AC58 /* Extensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Extensions.swift; sourceTree = "<group>"; };
+		A8C94E131F2883EC00B91845 /* ChatInputContainerView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ChatInputContainerView.swift; sourceTree = "<group>"; };
+		A8C94E151F288FD400B91845 /* TwitterMock.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = TwitterMock.entitlements; sourceTree = "<group>"; };
 		A8ECAA281F1DFFDC00113610 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
+		A8ECD6121F29A02A0030B031 /* Base */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = Base; path = Base.lproj/Localizable.strings; sourceTree = "<group>"; };
+		A8ECD6141F29A0390030B031 /* zh-Hant */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hant"; path = "zh-Hant.lproj/Main.strings"; sourceTree = "<group>"; };
+		A8ECD6151F29A0390030B031 /* zh-Hant */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hant"; path = "zh-Hant.lproj/LaunchScreen.strings"; sourceTree = "<group>"; };
+		A8ECD6161F29A0390030B031 /* zh-Hant */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hant"; path = "zh-Hant.lproj/Localizable.strings"; sourceTree = "<group>"; };
 		A8F454231F1F166400B243A7 /* NewMessageController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NewMessageController.swift; sourceTree = "<group>"; };
 		A8F454251F1F195400B243A7 /* User.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = User.swift; sourceTree = "<group>"; };
 		A8F454281F1F38A300B243A7 /* LoginController+handlers.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "LoginController+handlers.swift"; sourceTree = "<group>"; };
@@ -74,6 +82,7 @@
 			children = (
 				A8621DED1F2098F100F33600 /* UserCell.swift */,
 				A8653FB21F2222BF00DCF86F /* ChatMessageCell.swift */,
+				A8C94E131F2883EC00B91845 /* ChatInputContainerView.swift */,
 			);
 			name = Views;
 			sourceTree = "<group>";
@@ -81,6 +90,7 @@
 		A8705DC41F1CDA0800767215 = {
 			isa = PBXGroup;
 			children = (
+				A8ECD6131F29A02A0030B031 /* Localizable.strings */,
 				A8705DCF1F1CDA0800767215 /* TwitterMock */,
 				A8705DCE1F1CDA0800767215 /* Products */,
 				49977C3698B02B6D2B7E1B99 /* Pods */,
@@ -99,6 +109,7 @@
 		A8705DCF1F1CDA0800767215 /* TwitterMock */ = {
 			isa = PBXGroup;
 			children = (
+				A8C94E151F288FD400B91845 /* TwitterMock.entitlements */,
 				A8705DD01F1CDA0800767215 /* AppDelegate.swift */,
 				A8B810291F1CF6670011AC58 /* Extensions.swift */,
 				A8621DEC1F2098DA00F33600 /* Views */,
@@ -179,6 +190,11 @@
 						CreatedOnToolsVersion = 8.3.3;
 						DevelopmentTeam = Y8SJ5M44N4;
 						ProvisioningStyle = Automatic;
+						SystemCapabilities = {
+							com.apple.Keychain = {
+								enabled = 1;
+							};
+						};
 					};
 				};
 			};
@@ -189,6 +205,7 @@
 			knownRegions = (
 				en,
 				Base,
+				"zh-Hant",
 			);
 			mainGroup = A8705DC41F1CDA0800767215;
 			productRefGroup = A8705DCE1F1CDA0800767215 /* Products */;
@@ -205,6 +222,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				A8ECD6111F29A02A0030B031 /* Localizable.strings in Resources */,
 				A8705DDB1F1CDA0900767215 /* LaunchScreen.storyboard in Resources */,
 				A8ECAA291F1DFFDC00113610 /* GoogleService-Info.plist in Resources */,
 				A8705DD81F1CDA0900767215 /* Assets.xcassets in Resources */,
@@ -268,6 +286,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				A8FC8D9E1F205B3D008E2137 /* ChatLogController.swift in Sources */,
+				A8C94E141F2883EC00B91845 /* ChatInputContainerView.swift in Sources */,
 				A8705DD31F1CDA0800767215 /* MessageController.swift in Sources */,
 				A8F454241F1F166400B243A7 /* NewMessageController.swift in Sources */,
 				A8621DEB1F20868900F33600 /* Message.swift in Sources */,
@@ -288,6 +307,7 @@
 			isa = PBXVariantGroup;
 			children = (
 				A8705DD51F1CDA0800767215 /* Base */,
+				A8ECD6141F29A0390030B031 /* zh-Hant */,
 			);
 			name = Main.storyboard;
 			sourceTree = "<group>";
@@ -296,8 +316,18 @@
 			isa = PBXVariantGroup;
 			children = (
 				A8705DDA1F1CDA0900767215 /* Base */,
+				A8ECD6151F29A0390030B031 /* zh-Hant */,
 			);
 			name = LaunchScreen.storyboard;
+			sourceTree = "<group>";
+		};
+		A8ECD6131F29A02A0030B031 /* Localizable.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				A8ECD6121F29A02A0030B031 /* Base */,
+				A8ECD6161F29A0390030B031 /* zh-Hant */,
+			);
+			name = Localizable.strings;
 			sourceTree = "<group>";
 		};
 /* End PBXVariantGroup section */
@@ -307,6 +337,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
 				CLANG_ANALYZER_NONNULL = YES;
 				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
@@ -357,6 +388,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
 				CLANG_ANALYZER_NONNULL = YES;
 				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
@@ -401,6 +433,7 @@
 			baseConfigurationReference = 6BD54DFC5ECA821AC756BA5A /* Pods-TwitterMock.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_ENTITLEMENTS = TwitterMock/TwitterMock.entitlements;
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				DEVELOPMENT_TEAM = Y8SJ5M44N4;
 				INFOPLIST_FILE = TwitterMock/Info.plist;
@@ -419,6 +452,7 @@
 			baseConfigurationReference = FFE5B5BD841FCEF287A7A458 /* Pods-TwitterMock.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_ENTITLEMENTS = TwitterMock/TwitterMock.entitlements;
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				DEVELOPMENT_TEAM = Y8SJ5M44N4;
 				INFOPLIST_FILE = TwitterMock/Info.plist;

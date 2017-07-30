@@ -1,7 +1,21 @@
-/* 
-  Localizable.strings
-  TwitterMock
+/*
+ Localizable.strings
+ TwitterMock
+ 
+ Created by 陳 冠禎 on 2017/7/27.
+ Copyright © 2017年 陳 冠禎. All rights reserved.
+ */
 
-  Created by 陳 冠禎 on 2017/7/27.
-  Copyright © 2017年 陳 冠禎. All rights reserved.
-*/
+
+"test"          = "TEST";
+"Logout"        = "Logout";
+"Login"         = "Login";
+"Register"      = "Register";
+"Name"          = "Name";
+"Email Address" = "Email Address";
+"Password"      = "Password";
+
+"Cancel" = "Cancel";
+"Send" = "Send";
+"Enter message" = "Enter message"; 
+"Friends" = "Friends";

@@ -63,7 +63,7 @@ extension LoginController: UIImagePickerControllerDelegate, UINavigationControll
             }
 
             let imageName = UUID().uuidString
-            let storageRef = Storage.storage().reference().child("\(imageName).jpg")
+            let storageRef = Storage.storage().reference().child("user_Profile_Image").child("\(imageName).jpg")
             
             guard let uploadData = UIImageJPEGRepresentation(image, 0.1) else {
                 return
@@ -78,7 +78,7 @@ extension LoginController: UIImagePickerControllerDelegate, UINavigationControll
                     }
 
                     let values = ["name": name, "email": email, "profileImage": profileImageUrl]
-                    self.messageController?.navigationItem.title = name
+                    self.messageController?.titleLabel.text = name
                     self.registerUserIntoDatabase(uid: uid, values: values as [String : AnyObject])
                 }
             

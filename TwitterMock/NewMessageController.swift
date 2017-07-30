@@ -22,7 +22,10 @@ class NewMessageController: UITableViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        navigationItem.leftBarButtonItem = UIBarButtonItem(title: "Cancel", style: .plain, target: self, action: #selector(cancelHandler))
+        let friendTitle = NSLocalizedString("Friends", comment: "")
+        navigationItem.title = friendTitle
+        let title = NSLocalizedString("Cancel", comment: "")
+        navigationItem.leftBarButtonItem = UIBarButtonItem(title: title, style: .plain, target: self, action: #selector(cancelHandler))
         tableView.register(UserCell.self, forCellReuseIdentifier: cellId)
         fetchUser()
     }
@@ -68,9 +71,9 @@ class NewMessageController: UITableViewController {
             (snapshot) in
             
             if let dictionary = snapshot.value as? [String: AnyObject] {
-                let user = User()
+                let user = User(dictionary: dictionary)
                 user.id = snapshot.key
-                user.setValuesForKeys(dictionary)
+                
                 self.users.append(user)
             }
             
