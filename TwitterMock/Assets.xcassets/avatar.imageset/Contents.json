@@ -2,22 +2,11 @@
   "images" : [
     {
       "idiom" : "universal",
+      "filename" : "avatar.png",
       "scale" : "1x"
     },
     {
-      "resizing" : {
-        "mode" : "3-part-horizontal",
-        "center" : {
-          "mode" : "tile",
-          "width" : 73
-        },
-        "cap-insets" : {
-          "right" : 0,
-          "left" : 147
-        }
-      },
       "idiom" : "universal",
-      "filename" : "nedstark@2x.png",
       "scale" : "2x"
     },
     {
